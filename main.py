@@ -37,19 +37,7 @@ async def on_ready():
 @client.event
 async def on_voice_state_update(member, before, after):
     # You can add more functionality here, like auto-joining or leaving a voice channel
-
-@client.event
-async def on_message(message):
-    # Handle your music commands here
-    if message.content.startswith('!join'):
-        if message.author.voice:
-            channel = message.author.voice.channel
-            await channel.connect()
-        else:
-            await message.channel.send("You must be in a voice channel to use this command!")
-    elif message.content.startswith('!play'):
-        # You can implement the play command logic here
-        pass
+    pass
 
 # Run the selfbot
 client.run(token)
