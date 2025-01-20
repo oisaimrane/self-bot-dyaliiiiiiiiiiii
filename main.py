@@ -13,53 +13,43 @@ admin_id = 793877159966015548  # Replace with your admin ID
 
 # Define bot intents and prefix
 intents = discord.Intents.default()
-bot = commands.Bot(command_prefix="!", self_bot=True, intents=intents)
+client = discord.Client(intents=intents)
 
 # Auto-react feature
-@bot.event
+@client.event
 async def on_message(message):
     if not message.guild:
         return  # Ignore DMs
 
-    if bot.user.mentioned_in(message) and message.author.id != bot.user.id:
+    if client.user.mentioned_in(message) and message.author.id != client.user.id:
         try:
             await message.add_reaction("👍")  # Change emoji if needed
         except discord.Forbidden:
             print("Missing permission to add reaction.")
-    await bot.process_commands(message)
+    
+    await client.process_commands(message)
 
 # Music feature
-@bot.command()
-async def join(ctx):
-    if ctx.author.voice:
-        channel = ctx.author.voice.channel
-        await channel.connect()
-    else:
-        await ctx.send("You must be in a voice channel to use this command!")
+@client.event
+async def on_ready():
+    print(f'Logged in as {client.user}')
 
-@bot.command()
-async def play(ctx, url):
-    if ctx.voice_client is None:
-        await ctx.send("I need to be in a voice channel first! Use `!join`.")
-        return
+@client.event
+async def on_voice_state_update(member, before, after):
+    # You can add more functionality here, like auto-joining or leaving a voice channel
 
-    YDL_OPTIONS = {"format": "bestaudio", "noplaylist": True}
-    FFMPEG_OPTIONS = {"options": "-vn"}
+@client.event
+async def on_message(message):
+    # Handle your music commands here
+    if message.content.startswith('!join'):
+        if message.author.voice:
+            channel = message.author.voice.channel
+            await channel.connect()
+        else:
+            await message.channel.send("You must be in a voice channel to use this command!")
+    elif message.content.startswith('!play'):
+        # You can implement the play command logic here
+        pass
 
-    vc = ctx.voice_client
-
-    with YoutubeDL(YDL_OPTIONS) as ydl:
-        info = ydl.extract_info(url, download=False)
-        url2 = info["url"]
-        vc.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=url2, **FFMPEG_OPTIONS))
-        await ctx.send(f"Now playing: {info['title']}")
-
-@bot.command()
-async def leave(ctx):
-    if ctx.voice_client:
-        await ctx.voice_client.disconnect()
-    else:
-        await ctx.send("I'm not in a voice channel!")
-
-# Run the bot (selfbot specific: bot=False)
-bot.run(token, bot=False)
+# Run the selfbot
+client.run(token)
