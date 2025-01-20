@@ -3,7 +3,7 @@ from discord.ext import commands
 from youtube_dl import YoutubeDL
 
 # Replace with your Discord token
-token = ""
+token = os.getenv("DISCORD_TOKEN")
 
 # Set your admin account's Discord ID
 admin_id = 793877159966015548  # Replace with your admin ID
