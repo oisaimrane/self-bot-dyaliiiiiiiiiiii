@@ -76,4 +76,5 @@ async def on_voice_state_update(member, before, after):
     pass
 
 # Run the selfbot with user token
+print(f"Using token: {token[:10]}...")  # Debugging the token
 client.run(token)
