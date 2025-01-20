@@ -11,10 +11,9 @@ if not token:
 # Set your admin account's Discord ID
 admin_id = 793877159966015548  # Replace with your admin ID
 
-# Define bot intents and client
+# Define bot intents and selfbot settings
 intents = discord.Intents.default()
-client = discord.Client(intents=intents)
-bot = commands.Bot(command_prefix="!", self_bot=True, intents=intents)
+client = commands.Bot(command_prefix="!", self_bot=True, intents=intents)
 
 # Auto-react feature for messages where the selfbot is mentioned
 @client.event
@@ -28,10 +27,10 @@ async def on_message(message):
         except discord.Forbidden:
             print("Missing permission to add reaction.")
     
-    await bot.process_commands(message)  # Process other commands
+    await client.process_commands(message)  # Process other commands
 
 # Music feature: Join voice channel
-@bot.command()
+@client.command()
 async def join(ctx):
     if ctx.author.voice:
         channel = ctx.author.voice.channel
@@ -40,7 +39,7 @@ async def join(ctx):
         await ctx.send("You must be in a voice channel to use this command!")
 
 # Music feature: Play audio from URL
-@bot.command()
+@client.command()
 async def play(ctx, url):
     if ctx.voice_client is None:
         await ctx.send("I need to be in a voice channel first! Use `!join`.")
@@ -58,7 +57,7 @@ async def play(ctx, url):
         await ctx.send(f"Now playing: {info['title']}")
 
 # Music feature: Leave voice channel
-@bot.command()
+@client.command()
 async def leave(ctx):
     if ctx.voice_client:
         await ctx.voice_client.disconnect()
@@ -76,5 +75,5 @@ async def on_voice_state_update(member, before, after):
     # Implement any automatic behavior when voice states change, e.g., auto join/leave
     pass
 
-# Run the selfbot
-client.run(token)
+# Run the selfbot with user token
+client.run(token, bot=False)
