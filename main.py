@@ -76,4 +76,4 @@ async def on_voice_state_update(member, before, after):
     pass
 
 # Run the selfbot with user token
-client.run(token, bot=False)
+client.run(token)
