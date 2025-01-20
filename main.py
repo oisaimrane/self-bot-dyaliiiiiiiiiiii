@@ -5,6 +5,9 @@ from youtube_dl import YoutubeDL
 
 # Replace with your Discord token
 token = os.getenv("DISCORD_TOKEN")
+if not token:
+    raise ValueError("DISCORD_TOKEN environment variable is not set")
+
 
 # Set your admin account's Discord ID
 admin_id = 793877159966015548  # Replace with your admin ID
